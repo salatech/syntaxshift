@@ -1,36 +1,97 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SyntaxShift
 
-## Getting Started
+Developer-friendly format transformation tool built with Next.js.
 
-First, run the development server:
+Live URL: `https://syntaxshifts.vercel.app/`
+
+## What This Project Does
+
+SyntaxShift converts code/data formats in the browser using a frontend transform engine.
+
+Current converters:
+- `SVG -> JSX`
+- `HTML -> JSX`
+- `JSON -> TypeScript`
+- `JSON -> YAML`
+- `JSON Schema -> TypeScript`
+- `Python -> JavaScript`
+- `JavaScript -> Python`
+- `Markdown -> HTML`
+- `XML -> JSON`
+- `YAML -> JSON`
+
+## Tech Stack
+
+- Next.js (App Router)
+- React + TypeScript
+- Tailwind CSS
+- Vitest (unit tests)
+- Parsing libs where appropriate (`js-yaml`, `fast-xml-parser`, `marked`)
+
+## Project Structure
+
+- `app/` - routes, metadata, SEO files (`robots.ts`, `sitemap.ts`)
+- `components/` - UI shell, nav, editor panes, settings UI
+- `lib/converters/registry.ts` - converter catalog + defaults
+- `lib/converters/frontend-engine.ts` - transformation logic
+- `tests/` - engine and registry tests
+
+## Local Development
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `npm run dev` - start local dev server
+- `npm run lint` - run ESLint
+- `npm run test` - run Vitest
+- `npm run build` - production build check
+- `npm run start` - start production server
 
-## Learn More
+## How Transforms Work
 
-To learn more about Next.js, take a look at the following resources:
+`components/converter-shell.tsx` calls:
+- `transformInFrontend(slug, input, settings)` from `lib/converters/frontend-engine.ts`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The engine:
+- routes by converter slug
+- parses input safely
+- returns transformed output or throws a readable error
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Adding a New Converter
 
-## Deploy on Vercel
+1. Add converter metadata in `lib/converters/registry.ts`:
+   - `slug`, `title`, `sourceLabel`, `targetLabel`, `category`
+   - optional `settings`
+2. Add transformation logic in `lib/converters/frontend-engine.ts` switch block.
+3. Add default input sample in `getDefaultInput(...)` if needed.
+4. Add tests in `tests/engine.test.ts`.
+5. Run:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+npm run lint && npm run test && npm run build
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## SEO
+
+SEO is configured with:
+- global metadata in `app/layout.tsx`
+- per-converter metadata in `app/[converterSlug]/page.tsx`
+- `app/sitemap.ts`
+- `app/robots.ts`
+
+After deploy, submit:
+- `https://syntaxshifts.vercel.app/sitemap.xml`
+
+to Google Search Console.
+
+## Notes
+
+- Mobile navigation uses a slide-in drawer.
+- Icon assets are served from `app/icon.png`.
+- The repo may still contain legacy API routes (`app/api/*`), but the converter UI currently runs on frontend transform logic.
