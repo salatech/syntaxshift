@@ -4,6 +4,11 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "SyntaxShift",
   description: "Convert across data and code formats instantly.",
+  icons: {
+    icon: "/icon.png",
+    shortcut: "/icon.png",
+    apple: "/icon.png",
+  },
 };
 
 export default function RootLayout({
