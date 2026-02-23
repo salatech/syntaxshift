@@ -105,9 +105,11 @@ export function EditorPane({ label, language, value, onChange, readOnly, placeho
             searchKeymap: false,
           }}
           extensions={extensions}
+          height="100%"
           onChange={onChange}
           placeholder={placeholder}
           readOnly={readOnly}
+          style={{ height: "100%" }}
           theme={isDark ? "dark" : "light"}
           value={value}
         />
