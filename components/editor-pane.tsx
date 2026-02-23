@@ -1,25 +1,82 @@
+"use client";
+
+import { useMemo } from "react";
+import CodeMirror from "@uiw/react-codemirror";
+import { EditorView } from "@codemirror/view";
+
+import { getLanguageExtension } from "@/lib/codemirror-lang";
+
 type EditorPaneProps = {
   label: string;
+  language?: string;
   value: string;
   onChange?: (value: string) => void;
   readOnly?: boolean;
   placeholder?: string;
 };
 
-export function EditorPane({ label, value, onChange, readOnly, placeholder }: EditorPaneProps) {
+const baseTheme = EditorView.theme({
+  "&": {
+    fontSize: "14px",
+    backgroundColor: "transparent",
+  },
+  ".cm-gutters": {
+    backgroundColor: "transparent",
+    borderRight: "none",
+    color: "oklch(0.55 0.04 257)",
+  },
+  ".cm-content": {
+    fontFamily:
+      "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
+  },
+  ".cm-activeLine": {
+    backgroundColor: "oklch(0.93 0.01 255 / 0.5)",
+  },
+  ".cm-activeLineGutter": {
+    backgroundColor: "transparent",
+  },
+  "&.cm-focused": {
+    outline: "none",
+  },
+  ".cm-scroller": {
+    overflow: "auto",
+  },
+});
+
+export function EditorPane({ label, language, value, onChange, readOnly, placeholder }: EditorPaneProps) {
+  const extensions = useMemo(() => {
+    const ext = [baseTheme];
+    if (language) {
+      const langExt = getLanguageExtension(language);
+      if (langExt) ext.push(langExt);
+    }
+    return ext;
+  }, [language]);
+
   return (
     <div className="flex h-full min-h-0 flex-1 flex-col rounded-2xl border border-border/70 bg-card/80 shadow-sm backdrop-blur">
       <div className="border-b border-border/70 px-3 py-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
         {label}
       </div>
-      <textarea
-        className="h-full min-h-[320px] w-full flex-1 resize-none rounded-b-2xl bg-background/65 p-3 font-mono text-sm outline-none ring-offset-background focus:ring-2 focus:ring-ring"
-        onChange={(event) => onChange?.(event.target.value)}
-        placeholder={placeholder}
-        readOnly={readOnly}
-        spellCheck={false}
-        value={value}
-      />
+      <div className="min-h-[320px] flex-1 overflow-auto rounded-b-2xl bg-background/65">
+        <CodeMirror
+          basicSetup={{
+            lineNumbers: true,
+            foldGutter: false,
+            highlightActiveLine: true,
+            highlightSelectionMatches: true,
+            bracketMatching: true,
+            closeBrackets: true,
+            autocompletion: false,
+            searchKeymap: false,
+          }}
+          extensions={extensions}
+          onChange={onChange}
+          placeholder={placeholder}
+          readOnly={readOnly}
+          value={value}
+        />
+      </div>
     </div>
   );
 }

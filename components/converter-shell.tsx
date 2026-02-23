@@ -78,16 +78,14 @@ export function ConverterShell({ slug }: ConverterShellProps) {
       >
         <button
           aria-label="Close menu"
-          className={`absolute inset-0 bg-black/40 transition-opacity duration-300 ${
-            mobileNavOpen ? "opacity-100" : "opacity-0"
-          }`}
+          className={`absolute inset-0 bg-black/40 transition-opacity duration-300 ${mobileNavOpen ? "opacity-100" : "opacity-0"
+            }`}
           onClick={() => setMobileNavOpen(false)}
           type="button"
         />
         <ConverterNav
-          className={`absolute left-0 top-0 h-full w-[84%] max-w-80 border-r border-border/70 shadow-xl transition-transform duration-300 ease-out ${
-            mobileNavOpen ? "translate-x-0" : "-translate-x-full"
-          }`}
+          className={`absolute left-0 top-0 h-full w-[84%] max-w-80 border-r border-border/70 shadow-xl transition-transform duration-300 ease-out ${mobileNavOpen ? "translate-x-0" : "-translate-x-full"
+            }`}
           onNavigate={() => setMobileNavOpen(false)}
         />
       </div>
@@ -143,12 +141,14 @@ export function ConverterShell({ slug }: ConverterShellProps) {
         <section className="mt-3 grid min-h-0 flex-1 grid-cols-1 gap-3 lg:grid-cols-2">
           <EditorPane
             label={converter.sourceLabel}
+            language={converter.sourceLabel}
             onChange={setInput}
             placeholder="Paste input..."
             value={input}
           />
           <EditorPane
             label={converter.targetLabel}
+            language={converter.targetLabel}
             placeholder={loading ? "Transforming..." : "Output..."}
             readOnly
             value={error ? `Error: ${error}` : output}
