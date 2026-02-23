@@ -6,6 +6,7 @@ import { Menu, X } from "lucide-react";
 import { ConverterNav } from "@/components/converter-nav";
 import { EditorPane } from "@/components/editor-pane";
 import { SettingsPanel } from "@/components/settings-panel";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { transformInFrontend } from "@/lib/converters/frontend-engine";
 import { getConverterBySlug, getDefaultInput, getDefaultSettings } from "@/lib/converters/registry";
 import type { ConverterSettings } from "@/lib/converters/types";
@@ -117,6 +118,7 @@ export function ConverterShell({ slug }: ConverterShellProps) {
                   <X className="h-4 w-4" />
                 </button>
               ) : null}
+              <ThemeToggle />
               <button
                 className="rounded-lg border border-border bg-background px-3 py-2 text-sm font-medium transition hover:bg-accent disabled:opacity-50"
                 disabled={!output}

@@ -3,8 +3,10 @@
 import { useMemo } from "react";
 import CodeMirror from "@uiw/react-codemirror";
 import { EditorView } from "@codemirror/view";
+import { oneDark } from "@codemirror/theme-one-dark";
 
 import { getLanguageExtension } from "@/lib/codemirror-lang";
+import { useTheme } from "@/components/theme-provider";
 
 type EditorPaneProps = {
   label: string;
@@ -15,7 +17,7 @@ type EditorPaneProps = {
   placeholder?: string;
 };
 
-const baseTheme = EditorView.theme({
+const lightTheme = EditorView.theme({
   "&": {
     fontSize: "14px",
     backgroundColor: "transparent",
@@ -43,15 +45,47 @@ const baseTheme = EditorView.theme({
   },
 });
 
+const darkTheme = EditorView.theme({
+  "&": {
+    fontSize: "14px",
+    backgroundColor: "transparent",
+  },
+  ".cm-gutters": {
+    backgroundColor: "transparent",
+    borderRight: "none",
+    color: "oklch(0.5 0.03 265)",
+  },
+  ".cm-content": {
+    fontFamily:
+      "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
+  },
+  ".cm-activeLine": {
+    backgroundColor: "oklch(0.22 0.03 265 / 0.6)",
+  },
+  ".cm-activeLineGutter": {
+    backgroundColor: "transparent",
+  },
+  "&.cm-focused": {
+    outline: "none",
+  },
+  ".cm-scroller": {
+    overflow: "auto",
+  },
+});
+
 export function EditorPane({ label, language, value, onChange, readOnly, placeholder }: EditorPaneProps) {
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
+
   const extensions = useMemo(() => {
-    const ext = [baseTheme];
+    const ext = [isDark ? darkTheme : lightTheme];
+    if (isDark) ext.push(oneDark);
     if (language) {
       const langExt = getLanguageExtension(language);
       if (langExt) ext.push(langExt);
     }
     return ext;
-  }, [language]);
+  }, [language, isDark]);
 
   return (
     <div className="flex h-full min-h-0 flex-1 flex-col rounded-2xl border border-border/70 bg-card/80 shadow-sm backdrop-blur">
@@ -74,6 +108,7 @@ export function EditorPane({ label, language, value, onChange, readOnly, placeho
           onChange={onChange}
           placeholder={placeholder}
           readOnly={readOnly}
+          theme={isDark ? "dark" : "light"}
           value={value}
         />
       </div>
