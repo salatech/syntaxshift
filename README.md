@@ -9,6 +9,7 @@ Live URL: `https://syntaxshifts.vercel.app/`
 SyntaxShift converts code/data formats in the browser using a frontend transform engine.
 
 Current converters:
+
 - `SVG -> JSX`
 - `HTML -> JSX`
 - `JSON -> TypeScript`
@@ -56,9 +57,11 @@ Open `http://localhost:3000`.
 ## How Transforms Work
 
 `components/converter-shell.tsx` calls:
+
 - `transformInFrontend(slug, input, settings)` from `lib/converters/frontend-engine.ts`
 
 The engine:
+
 - routes by converter slug
 - parses input safely
 - returns transformed output or throws a readable error
@@ -80,12 +83,14 @@ npm run lint && npm run test && npm run build
 ## SEO
 
 SEO is configured with:
+
 - global metadata in `app/layout.tsx`
 - per-converter metadata in `app/[converterSlug]/page.tsx`
 - `app/sitemap.ts`
 - `app/robots.ts`
 
 After deploy, submit:
+
 - `https://syntaxshifts.vercel.app/sitemap.xml`
 
 to Google Search Console.
@@ -94,4 +99,4 @@ to Google Search Console.
 
 - Mobile navigation uses a slide-in drawer.
 - Icon assets are served from `app/icon.png`.
-- The repo may still contain legacy API routes (`app/api/*`), but the converter UI currently runs on frontend transform logic.
+- All transformations run client-side via `lib/converters/frontend-engine.ts`.
