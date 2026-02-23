@@ -53,14 +53,14 @@ const darkTheme = EditorView.theme({
   ".cm-gutters": {
     backgroundColor: "transparent",
     borderRight: "none",
-    color: "oklch(0.5 0.03 265)",
+    color: "oklch(0.4 0 0)",
   },
   ".cm-content": {
     fontFamily:
       "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
   },
   ".cm-activeLine": {
-    backgroundColor: "oklch(0.22 0.03 265 / 0.6)",
+    backgroundColor: "oklch(0.15 0 0 / 0.8)",
   },
   ".cm-activeLineGutter": {
     backgroundColor: "transparent",
