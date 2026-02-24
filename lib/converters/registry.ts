@@ -1,34 +1,12 @@
 import type { ConverterCategory, ConverterDefinition, ConverterSettings } from "@/lib/converters/types";
 
 const byCategory: Record<ConverterCategory, ConverterDefinition[]> = {
-  SVG: [
-    {
-      slug: "svg-to-jsx",
-      title: "SVG to JSX",
-      sourceLabel: "SVG",
-      targetLabel: "JSX",
-      category: "SVG",
-      settings: [{ key: "svgo", label: "SVGO optimization", type: "boolean", defaultValue: true }],
-    },
-  ],
-  HTML: [
-    { slug: "html-to-jsx", title: "HTML to JSX", sourceLabel: "HTML", targetLabel: "JSX", category: "HTML" },
-  ],
-  JSON: [
-    { slug: "json-to-typescript", title: "JSON to TypeScript", sourceLabel: "JSON", targetLabel: "TypeScript", category: "JSON" },
-    { slug: "json-to-yaml", title: "JSON to YAML", sourceLabel: "JSON", targetLabel: "YAML", category: "JSON" },
-    {
-      slug: "json-prettify",
-      title: "JSON Prettify / Minify",
-      sourceLabel: "JSON",
-      targetLabel: "JSON",
-      category: "JSON",
-      settings: [{ key: "minify", label: "Minify output", type: "boolean", defaultValue: false }],
-    },
-    { slug: "json-to-zod", title: "JSON to Zod Schema", sourceLabel: "JSON", targetLabel: "Zod", category: "JSON" },
-  ],
-  "JSON Schema": [
-    { slug: "json-schema-to-typescript", title: "JSON Schema to TypeScript", sourceLabel: "JSON Schema", targetLabel: "TypeScript", category: "JSON Schema" },
+  SVG: [],
+  HTML: [],
+  Utilities: [
+    { slug: "base64-encode", title: "Base64 Encode", sourceLabel: "Text", targetLabel: "Base64", category: "Utilities" },
+    { slug: "base64-decode", title: "Base64 Decode", sourceLabel: "Base64", targetLabel: "Text", category: "Utilities" },
+    { slug: "jwt-decode", title: "JWT Decode", sourceLabel: "JWT", targetLabel: "JSON", category: "Utilities" },
   ],
   "Programming Languages": [
     {
@@ -46,18 +24,41 @@ const byCategory: Record<ConverterCategory, ConverterDefinition[]> = {
       category: "Programming Languages",
     },
   ],
+
+  JSON: [
+    { slug: "json-to-typescript", title: "JSON to TypeScript", sourceLabel: "JSON", targetLabel: "TypeScript", category: "JSON" },
+    { slug: "json-to-yaml", title: "JSON to YAML", sourceLabel: "JSON", targetLabel: "YAML", category: "JSON" },
+    {
+      slug: "json-prettify",
+      title: "JSON Prettify / Minify",
+      sourceLabel: "JSON",
+      targetLabel: "JSON",
+      category: "JSON",
+      settings: [{ key: "minify", label: "Minify output", type: "boolean", defaultValue: false }],
+    },
+    { slug: "json-to-zod", title: "JSON to Zod Schema", sourceLabel: "JSON", targetLabel: "Zod", category: "JSON" },
+  ],
+  "JSON Schema": [
+    { slug: "json-schema-to-typescript", title: "JSON Schema to TypeScript", sourceLabel: "JSON Schema", targetLabel: "TypeScript", category: "JSON Schema" },
+  ],
+
   CSS: [],
   JavaScript: [],
   GraphQL: [],
   "JSON-LD": [],
   TypeScript: [],
   Flow: [],
-  Utilities: [
-    { slug: "base64-encode", title: "Base64 Encode", sourceLabel: "Text", targetLabel: "Base64", category: "Utilities" },
-    { slug: "base64-decode", title: "Base64 Decode", sourceLabel: "Base64", targetLabel: "Text", category: "Utilities" },
-    { slug: "jwt-decode", title: "JWT Decode", sourceLabel: "JWT", targetLabel: "JSON", category: "Utilities" },
-  ],
+
   Others: [
+    {
+      slug: "svg-to-jsx",
+      title: "SVG to JSX",
+      sourceLabel: "SVG",
+      targetLabel: "JSX",
+      category: "Others",
+      settings: [{ key: "svgo", label: "SVGO optimization", type: "boolean", defaultValue: true }],
+    },
+    { slug: "html-to-jsx", title: "HTML to JSX", sourceLabel: "HTML", targetLabel: "JSX", category: "Others" },
     { slug: "markdown-to-html", title: "Markdown to HTML", sourceLabel: "Markdown", targetLabel: "HTML", category: "Others" },
     { slug: "xml-to-json", title: "XML to JSON", sourceLabel: "XML", targetLabel: "JSON", category: "Others" },
     { slug: "yaml-to-json", title: "YAML to JSON", sourceLabel: "YAML", targetLabel: "JSON", category: "Others" },
