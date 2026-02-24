@@ -94,22 +94,25 @@ export function ConverterShell({ slug }: ConverterShellProps) {
       </div>
       <section className="relative z-10 flex min-h-screen flex-1 flex-col p-3 md:p-4">
         <header className="rounded-2xl border border-border/70 bg-card/80 px-4 py-4 shadow-sm backdrop-blur md:px-5">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div className="space-y-0.5">
-              <button
-                aria-label={mobileNavOpen ? "Close menu" : "Open menu"}
-                className="mb-2 inline-flex items-center justify-center rounded-lg border border-border bg-background p-2 text-foreground lg:hidden"
-                onClick={() => setMobileNavOpen(true)}
-                type="button"
-              >
-                <Menu className="h-4 w-4" />
-              </button>
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0 flex-1">
+              <div className="mb-3 flex items-center gap-2.5 lg:hidden">
+                <button
+                  aria-label={mobileNavOpen ? "Close menu" : "Open menu"}
+                  className="inline-flex shrink-0 items-center justify-center rounded-lg border border-border bg-background p-2 text-foreground"
+                  onClick={() => setMobileNavOpen(true)}
+                  type="button"
+                >
+                  <Menu className="h-4 w-4" />
+                </button>
+                <span className="text-base font-bold tracking-tight text-foreground">SyntaxShift</span>
+              </div>
               <h2 className="text-xl font-semibold tracking-tight">{converter.title}</h2>
-              <p className="text-sm text-muted-foreground/90">
+              <p className="mt-0.5 text-sm text-muted-foreground/90">
                 {converter.sourceLabel} to {converter.targetLabel}
               </p>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="hidden items-center gap-2 lg:flex">
               {mobileNavOpen ? (
                 <button
                   aria-label="Close menu"
