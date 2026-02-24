@@ -22,6 +22,8 @@ const byCategory: Record<ConverterCategory, ConverterDefinition[]> = {
     { slug: "json-to-typescript", title: "JSON to TypeScript", sourceLabel: "JSON", targetLabel: "TypeScript", category: "JSON" },
     { slug: "json-to-yaml", title: "JSON / YAML", sourceLabel: "JSON", targetLabel: "YAML", category: "JSON", reversible: true, reverseSlug: "yaml-to-json" },
     { slug: "json-to-zod", title: "JSON to Zod Schema", sourceLabel: "JSON", targetLabel: "Zod", category: "JSON" },
+    { slug: "xml-to-json", title: "XML to JSON", sourceLabel: "XML", targetLabel: "JSON", category: "JSON" },
+    { slug: "csv-to-json", title: "CSV to JSON", sourceLabel: "CSV", targetLabel: "JSON", category: "JSON" },
   ],
   "JSON Schema": [
     { slug: "json-schema-to-typescript", title: "JSON Schema to TypeScript", sourceLabel: "JSON Schema", targetLabel: "TypeScript", category: "JSON Schema" },
@@ -37,7 +39,7 @@ const byCategory: Record<ConverterCategory, ConverterDefinition[]> = {
     },
     { slug: "html-to-jsx", title: "HTML to JSX", sourceLabel: "HTML", targetLabel: "JSX", category: "Others" },
     { slug: "markdown-to-html", title: "Markdown to HTML", sourceLabel: "Markdown", targetLabel: "HTML", category: "Others" },
-    { slug: "xml-to-json", title: "XML to JSON", sourceLabel: "XML", targetLabel: "JSON", category: "Others" },
+    { slug: "sql-to-typescript", title: "SQL to TypeScript", sourceLabel: "SQL", targetLabel: "TypeScript", category: "Others" },
   ],
 };
 
@@ -65,6 +67,8 @@ export function getDefaultInput(slug: string): string {
     "javascript-to-python": "function greet(name) {\n  return `Hello, ${name}`;\n}",
     "markdown-to-html": "# SyntaxShift\n\nConvert anything.",
     "xml-to-json": "<user><id>1</id><name>SyntaxShift</name></user>",
+    "csv-to-json": "id,name,email,active\n1,Alice,alice@example.com,true\n2,Bob,bob@example.com,false\n3,Charlie,charlie@example.com,true",
+    "sql-to-typescript": "CREATE TABLE users (\n  id INT PRIMARY KEY,\n  name VARCHAR(255) NOT NULL,\n  email VARCHAR(255),\n  age INT,\n  active BOOLEAN DEFAULT true,\n  created_at TIMESTAMP\n);",
     "yaml-to-json": "id: 1\nname: SyntaxShift",
     "base64-encode": "Hello, SyntaxShift!",
     "base64-decode": "SGVsbG8sIFN5bnRheFNoaWZ0IQ==",

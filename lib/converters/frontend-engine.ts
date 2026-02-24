@@ -451,6 +451,10 @@ export async function transformInFrontend(
       return { output: rot13(input) };
     case "json-to-zod":
       return { output: jsonToZod(input) };
+    case "csv-to-json":
+      return { output: csvToJson(input) };
+    case "sql-to-typescript":
+      return { output: sqlToTypescript(input) };
     default:
       throw new Error("Unsupported transform mode.");
   }
@@ -461,4 +465,90 @@ function rot13(input: string): string {
     const base = char <= "Z" ? 65 : 97;
     return String.fromCharCode(((char.charCodeAt(0) - base + 13) % 26) + base);
   });
+}
+
+function csvToJson(input: string): string {
+  const lines = input.trim().split("\n");
+  if (lines.length < 2) throw new Error("CSV must have at least a header row and one data row.");
+
+  const parseLine = (line: string): string[] => {
+    const fields: string[] = [];
+    let current = "";
+    let inQuotes = false;
+    for (const char of line) {
+      if (char === '"') {
+        inQuotes = !inQuotes;
+      } else if (char === "," && !inQuotes) {
+        fields.push(current.trim());
+        current = "";
+      } else {
+        current += char;
+      }
+    }
+    fields.push(current.trim());
+    return fields;
+  };
+
+  const headers = parseLine(lines[0]);
+  const rows = lines.slice(1).filter((l) => l.trim()).map((line) => {
+    const values = parseLine(line);
+    const obj: Record<string, unknown> = {};
+    headers.forEach((header, i) => {
+      const val = values[i] ?? "";
+      if (val === "true" || val === "false") obj[header] = val === "true";
+      else if (val !== "" && !isNaN(Number(val))) obj[header] = Number(val);
+      else obj[header] = val;
+    });
+    return obj;
+  });
+
+  return JSON.stringify(rows, null, 2);
+}
+
+function sqlToTypescript(input: string): string {
+  const tables = input.split(/;/).filter((s) => s.trim());
+  const results: string[] = [];
+
+  for (const table of tables) {
+    const tableMatch = table.match(/CREATE\s+TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?[`"]?(\w+)[`"]?\s*\(/i);
+    if (!tableMatch) continue;
+
+    const tableName = tableMatch[1];
+    const interfaceName = tableName
+      .split("_")
+      .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+      .join("");
+
+    const columnsBlock = table.slice(table.indexOf("(") + 1).replace(/\)\s*$/, "");
+    const columnLines = columnsBlock.split(",").map((l) => l.trim()).filter((l) => l && !l.match(/^\s*(PRIMARY|UNIQUE|INDEX|KEY|CONSTRAINT|FOREIGN|CHECK)\s/i));
+
+    const fields: string[] = [];
+    for (const col of columnLines) {
+      const match = col.match(/^[`"]?(\w+)[`"]?\s+(\w+)/i);
+      if (!match) continue;
+
+      const colName = match[1];
+      const sqlType = match[2].toUpperCase();
+      const isNotNull = /NOT\s+NULL/i.test(col) || /PRIMARY\s+KEY/i.test(col);
+      const optional = isNotNull ? "" : "?";
+
+      let tsType = "string";
+      if (["INT", "INTEGER", "SMALLINT", "BIGINT", "TINYINT", "FLOAT", "DOUBLE", "DECIMAL", "NUMERIC", "REAL", "SERIAL"].includes(sqlType)) {
+        tsType = "number";
+      } else if (["BOOLEAN", "BOOL", "BIT"].includes(sqlType)) {
+        tsType = "boolean";
+      } else if (["DATE", "DATETIME", "TIMESTAMP", "TIMESTAMPTZ"].includes(sqlType)) {
+        tsType = "Date";
+      } else if (["JSON", "JSONB"].includes(sqlType)) {
+        tsType = "Record<string, unknown>";
+      }
+
+      fields.push(`  ${colName}${optional}: ${tsType};`);
+    }
+
+    results.push(`export interface ${interfaceName} {\n${fields.join("\n")}\n}`);
+  }
+
+  if (results.length === 0) throw new Error("No valid CREATE TABLE statements found.");
+  return results.join("\n\n");
 }
