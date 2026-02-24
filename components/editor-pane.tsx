@@ -15,77 +15,52 @@ type EditorPaneProps = {
   onChange?: (value: string) => void;
   readOnly?: boolean;
   placeholder?: string;
+  fontSize?: number;
 };
 
-const lightTheme = EditorView.theme({
-  "&": {
-    fontSize: "14px",
-    backgroundColor: "transparent",
-  },
-  ".cm-gutters": {
-    backgroundColor: "transparent",
-    borderRight: "none",
-    color: "oklch(0.55 0.04 257)",
-  },
-  ".cm-content": {
-    fontFamily:
-      "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
-  },
-  ".cm-activeLine": {
-    backgroundColor: "oklch(0.93 0.01 255 / 0.5)",
-  },
-  ".cm-activeLineGutter": {
-    backgroundColor: "transparent",
-  },
-  "&.cm-focused": {
-    outline: "none",
-  },
-  ".cm-scroller": {
-    overflow: "auto",
-  },
-});
+function makeTheme(isDark: boolean, fontSize: number) {
+  return EditorView.theme({
+    "&": {
+      fontSize: `${fontSize}px`,
+      backgroundColor: "transparent",
+    },
+    ".cm-gutters": {
+      backgroundColor: "transparent",
+      borderRight: "none",
+      color: isDark ? "oklch(0.4 0 0)" : "oklch(0.55 0.04 257)",
+    },
+    ".cm-content": {
+      fontFamily:
+        "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
+    },
+    ".cm-activeLine": {
+      backgroundColor: isDark ? "oklch(0.15 0 0 / 0.8)" : "oklch(0.93 0.01 255 / 0.5)",
+    },
+    ".cm-activeLineGutter": {
+      backgroundColor: "transparent",
+    },
+    "&.cm-focused": {
+      outline: "none",
+    },
+    ".cm-scroller": {
+      overflow: "auto",
+    },
+  });
+}
 
-const darkTheme = EditorView.theme({
-  "&": {
-    fontSize: "14px",
-    backgroundColor: "transparent",
-  },
-  ".cm-gutters": {
-    backgroundColor: "transparent",
-    borderRight: "none",
-    color: "oklch(0.4 0 0)",
-  },
-  ".cm-content": {
-    fontFamily:
-      "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
-  },
-  ".cm-activeLine": {
-    backgroundColor: "oklch(0.15 0 0 / 0.8)",
-  },
-  ".cm-activeLineGutter": {
-    backgroundColor: "transparent",
-  },
-  "&.cm-focused": {
-    outline: "none",
-  },
-  ".cm-scroller": {
-    overflow: "auto",
-  },
-});
-
-export function EditorPane({ label, language, value, onChange, readOnly, placeholder }: EditorPaneProps) {
+export function EditorPane({ label, language, value, onChange, readOnly, placeholder, fontSize = 14 }: EditorPaneProps) {
   const { theme } = useTheme();
   const isDark = theme === "dark";
 
   const extensions = useMemo(() => {
-    const ext = [isDark ? darkTheme : lightTheme];
+    const ext = [makeTheme(isDark, fontSize)];
     if (isDark) ext.push(oneDark);
     if (language) {
       const langExt = getLanguageExtension(language);
       if (langExt) ext.push(langExt);
     }
     return ext;
-  }, [language, isDark]);
+  }, [language, isDark, fontSize]);
 
   return (
     <div className="flex h-full min-h-0 flex-1 flex-col border border-border/70 bg-card/80 shadow-sm backdrop-blur">

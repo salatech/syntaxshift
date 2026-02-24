@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { ArrowLeftRight, Menu, Sparkles, X } from "lucide-react";
+import { ArrowLeftRight, Menu, Minus, Plus, Sparkles, X } from "lucide-react";
 import Link from "next/link";
 
 import { ConverterNav } from "@/components/converter-nav";
@@ -27,6 +27,7 @@ export function ConverterShell({ slug }: ConverterShellProps) {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [settings, setSettings] = useState<ConverterSettings>(() => getDefaultSettings(slug));
   const [reversed, setReversed] = useState(false);
+  const [fontSize, setFontSize] = useState(14);
 
   useEffect(() => {
     setInput(getDefaultInput(slug));
@@ -144,6 +145,21 @@ export function ConverterShell({ slug }: ConverterShellProps) {
                 </button>
               ) : null}
               <ThemeToggle />
+              <div className="flex items-center gap-1.5 border border-border bg-background px-2 py-1.5">
+                <Minus className="h-3 w-3 text-muted-foreground" />
+                <input
+                  aria-label="Font size"
+                  className="h-1 w-16 cursor-pointer accent-foreground"
+                  max={24}
+                  min={10}
+                  onChange={(e) => setFontSize(Number(e.target.value))}
+                  step={1}
+                  type="range"
+                  value={fontSize}
+                />
+                <Plus className="h-3 w-3 text-muted-foreground" />
+                <span className="ml-1 w-7 text-xs text-muted-foreground">{fontSize}px</span>
+              </div>
               <button
                 className="border border-border bg-background px-3 py-2 text-sm font-medium transition hover:bg-accent disabled:opacity-50"
                 disabled={!output}
@@ -192,6 +208,7 @@ export function ConverterShell({ slug }: ConverterShellProps) {
 
         <section className="relative mt-3 grid min-h-0 flex-1 grid-cols-1 gap-3 pb-20 lg:grid-cols-2 lg:pb-0">
           <EditorPane
+            fontSize={fontSize}
             label={reversed ? converter.targetLabel : converter.sourceLabel}
             language={reversed ? converter.targetLabel : converter.sourceLabel}
             onChange={setInput}
@@ -217,6 +234,7 @@ export function ConverterShell({ slug }: ConverterShellProps) {
           )}
 
           <EditorPane
+            fontSize={fontSize}
             label={reversed ? converter.sourceLabel : converter.targetLabel}
             language={reversed ? converter.sourceLabel : converter.targetLabel}
             placeholder={loading ? "Transforming..." : "Output..."}
