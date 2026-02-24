@@ -88,11 +88,11 @@ export function EditorPane({ label, language, value, onChange, readOnly, placeho
   }, [language, isDark]);
 
   return (
-    <div className="flex h-full min-h-0 flex-1 flex-col rounded-2xl border border-border/70 bg-card/80 shadow-sm backdrop-blur">
+    <div className="flex h-full min-h-0 flex-1 flex-col border border-border/70 bg-card/80 shadow-sm backdrop-blur">
       <div className="border-b border-border/70 px-3 py-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
         {label}
       </div>
-      <div className="min-h-[320px] flex-1 overflow-auto rounded-b-2xl bg-background/65">
+      <div className="min-h-[320px] flex-1 overflow-auto bg-background/65">
         <CodeMirror
           basicSetup={{
             lineNumbers: true,

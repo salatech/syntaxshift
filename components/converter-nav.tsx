@@ -35,7 +35,7 @@ export function ConverterNav({ className, onNavigate }: ConverterNavProps) {
                 <li key={converter.slug}>
                   <Link
                     className={cn(
-                      "block rounded-lg px-2.5 py-1.5 text-sm transition-colors hover:bg-accent/80",
+                      "block px-2.5 py-1.5 text-sm transition-colors hover:bg-accent/80",
                       converter.slug === activeSlug
                         ? "bg-primary/12 font-medium text-foreground ring-1 ring-primary/25"
                         : "text-foreground/85",

@@ -93,13 +93,13 @@ export function ConverterShell({ slug }: ConverterShellProps) {
         />
       </div>
       <section className="relative z-10 flex min-h-screen flex-1 flex-col p-3 md:p-4">
-        <header className="rounded-2xl border border-border/70 bg-card/80 px-4 py-4 shadow-sm backdrop-blur md:px-5">
+        <header className="border border-border/70 bg-card/80 px-4 py-4 shadow-sm backdrop-blur md:px-5">
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0 flex-1">
               <div className="mb-3 flex items-center gap-2.5 lg:hidden">
                 <button
                   aria-label={mobileNavOpen ? "Close menu" : "Open menu"}
-                  className="inline-flex shrink-0 items-center justify-center rounded-lg border border-border bg-background p-2 text-foreground"
+                  className="inline-flex shrink-0 items-center justify-center border border-border bg-background p-2 text-foreground"
                   onClick={() => setMobileNavOpen(true)}
                   type="button"
                 >
@@ -116,7 +116,7 @@ export function ConverterShell({ slug }: ConverterShellProps) {
               {mobileNavOpen ? (
                 <button
                   aria-label="Close menu"
-                  className="inline-flex items-center justify-center rounded-lg border border-border bg-background p-2 text-foreground lg:hidden"
+                  className="inline-flex items-center justify-center border border-border bg-background p-2 text-foreground lg:hidden"
                   onClick={() => setMobileNavOpen(false)}
                   type="button"
                 >
@@ -125,7 +125,7 @@ export function ConverterShell({ slug }: ConverterShellProps) {
               ) : null}
               <ThemeToggle />
               <button
-                className="rounded-lg border border-border bg-background px-3 py-2 text-sm font-medium transition hover:bg-accent disabled:opacity-50"
+                className="border border-border bg-background px-3 py-2 text-sm font-medium transition hover:bg-accent disabled:opacity-50"
                 disabled={!output}
                 onClick={copyOutput}
                 type="button"
@@ -135,7 +135,7 @@ export function ConverterShell({ slug }: ConverterShellProps) {
             </div>
           </div>
           {converter.settings?.length ? (
-            <div className="mt-4 rounded-xl border border-border/80 bg-background/70 p-3">
+            <div className="mt-4 border border-border/80 bg-background/70 p-3">
               <SettingsPanel
                 converter={converter}
                 onChange={(key, value) => setSettings((current) => ({ ...current, [key]: value }))}
@@ -150,16 +150,16 @@ export function ConverterShell({ slug }: ConverterShellProps) {
           const suggestions = detected ? getSuggestedConverters(detected.label, slug) : [];
           if (!detected || suggestions.length === 0) return null;
           return (
-            <div className="mt-2 flex flex-wrap items-center gap-2 rounded-xl border border-border/60 bg-card/60 px-3 py-2 text-xs backdrop-blur transition-all">
+            <div className="mt-2 flex flex-wrap items-center gap-2 border border-border/60 bg-card/60 px-3 py-2 text-xs backdrop-blur transition-all">
               <span className="inline-flex items-center gap-1 font-medium text-muted-foreground">
                 <Sparkles className="h-3 w-3" />
-                Detected <span className="rounded bg-primary/15 px-1.5 py-0.5 font-semibold text-foreground">{detected.label}</span>
+                Detected <span className="bg-primary/15 px-1.5 py-0.5 font-semibold text-foreground">{detected.label}</span>
               </span>
               <span className="text-muted-foreground">—</span>
               <span className="text-muted-foreground">Try:</span>
               {suggestions.slice(0, 4).map((s) => (
                 <Link
-                  className="rounded-md border border-border/80 bg-background px-2 py-0.5 font-medium text-foreground transition hover:bg-accent"
+                  className="border border-border/80 bg-background px-2 py-0.5 font-medium text-foreground transition hover:bg-accent"
                   href={`/${s.slug}`}
                   key={s.slug}
                 >
@@ -191,7 +191,7 @@ export function ConverterShell({ slug }: ConverterShellProps) {
       {/* Mobile bottom bar */}
       <div className="fixed bottom-0 left-0 right-0 z-50 flex items-center justify-between border-t border-border/70 bg-card/95 px-3 py-2.5 backdrop-blur lg:hidden">
         <button
-          className="flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-sm font-medium text-foreground transition hover:bg-accent"
+          className="flex items-center gap-1.5 px-2 py-1.5 text-sm font-medium text-foreground transition hover:bg-accent"
           onClick={() => setMobileNavOpen(true)}
           type="button"
         >
@@ -201,7 +201,7 @@ export function ConverterShell({ slug }: ConverterShellProps) {
         <div className="flex items-center gap-2">
           <ThemeToggle />
           <button
-            className="rounded-lg border border-border bg-background px-3 py-1.5 text-sm font-medium transition hover:bg-accent disabled:opacity-50"
+            className="border border-border bg-background px-3 py-1.5 text-sm font-medium transition hover:bg-accent disabled:opacity-50"
             disabled={!output}
             onClick={copyOutput}
             type="button"

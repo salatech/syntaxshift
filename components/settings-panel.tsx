@@ -14,7 +14,7 @@ export function SettingsPanel({ converter, settings, onChange }: SettingsPanelPr
   return (
     <div className="grid gap-3 md:grid-cols-2">
       {converter.settings.map((setting) => (
-        <div className="flex items-center justify-between gap-4 rounded-lg border border-border bg-card px-3 py-2" key={setting.key}>
+        <div className="flex items-center justify-between gap-4 border border-border bg-card px-3 py-2" key={setting.key}>
           <label className="text-sm font-medium" htmlFor={setting.key}>
             {setting.label}
           </label>
@@ -28,7 +28,7 @@ export function SettingsPanel({ converter, settings, onChange }: SettingsPanelPr
             />
           ) : setting.type === "select" ? (
             <select
-              className="rounded-md border border-border bg-background px-2 py-1 text-sm"
+              className="border border-border bg-background px-2 py-1 text-sm"
               id={setting.key}
               onChange={(event) => onChange(setting.key, event.target.value)}
               value={String(settings[setting.key] ?? setting.defaultValue)}
@@ -41,7 +41,7 @@ export function SettingsPanel({ converter, settings, onChange }: SettingsPanelPr
             </select>
           ) : (
             <input
-              className="rounded-md border border-border bg-background px-2 py-1 text-sm"
+              className="border border-border bg-background px-2 py-1 text-sm"
               id={setting.key}
               onChange={(event) => onChange(setting.key, event.target.value)}
               type="text"
