@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Menu, Sparkles, X } from "lucide-react";
+import { ArrowLeftRight, Menu, Sparkles, X } from "lucide-react";
 import Link from "next/link";
 
 import { ConverterNav } from "@/components/converter-nav";
@@ -26,6 +26,7 @@ export function ConverterShell({ slug }: ConverterShellProps) {
   const [copied, setCopied] = useState(false);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [settings, setSettings] = useState<ConverterSettings>(() => getDefaultSettings(slug));
+  const [reversed, setReversed] = useState(false);
 
   useEffect(() => {
     setInput(getDefaultInput(slug));
@@ -33,6 +34,7 @@ export function ConverterShell({ slug }: ConverterShellProps) {
     setError("");
     setSettings(getDefaultSettings(slug));
     setMobileNavOpen(false);
+    setReversed(false);
   }, [slug]);
 
   useEffect(() => {
@@ -40,7 +42,8 @@ export function ConverterShell({ slug }: ConverterShellProps) {
       setLoading(true);
       setError("");
       try {
-        const result = await transformInFrontend(slug, input, settings);
+        const activeSlug = reversed && converter?.reverseSlug ? converter.reverseSlug : slug;
+        const result = await transformInFrontend(activeSlug, input, settings);
         setOutput(result.output);
       } catch (requestError) {
         setOutput("");
@@ -53,7 +56,7 @@ export function ConverterShell({ slug }: ConverterShellProps) {
     return () => {
       clearTimeout(timeout);
     };
-  }, [input, settings, slug]);
+  }, [input, settings, slug, reversed, converter]);
 
   async function copyOutput() {
     if (!output) return;
@@ -108,9 +111,26 @@ export function ConverterShell({ slug }: ConverterShellProps) {
                 <span className="text-base font-bold tracking-tight text-foreground">SyntaxShift</span>
               </div>
               <h2 className="text-xl font-semibold tracking-tight">{converter.title}</h2>
-              <p className="mt-0.5 text-sm text-muted-foreground/90">
-                {converter.sourceLabel} to {converter.targetLabel}
-              </p>
+              <div className="mt-0.5 flex items-center gap-1.5 text-sm text-muted-foreground/90">
+                <span>{reversed ? converter.targetLabel : converter.sourceLabel}</span>
+                {converter.reversible ? (
+                  <button
+                    aria-label="Swap direction"
+                    className="inline-flex items-center justify-center p-0.5 text-muted-foreground transition hover:text-foreground"
+                    onClick={() => {
+                      setReversed((r) => !r);
+                      setInput("");
+                      setOutput("");
+                    }}
+                    type="button"
+                  >
+                    <ArrowLeftRight className="h-3.5 w-3.5" />
+                  </button>
+                ) : (
+                  <span>to</span>
+                )}
+                <span>{reversed ? converter.sourceLabel : converter.targetLabel}</span>
+              </div>
             </div>
             <div className="hidden items-center gap-2 lg:flex">
               {mobileNavOpen ? (
@@ -170,17 +190,35 @@ export function ConverterShell({ slug }: ConverterShellProps) {
           );
         })()}
 
-        <section className="mt-3 grid min-h-0 flex-1 grid-cols-1 gap-3 pb-20 lg:grid-cols-2 lg:pb-0">
+        <section className="relative mt-3 grid min-h-0 flex-1 grid-cols-1 gap-3 pb-20 lg:grid-cols-2 lg:pb-0">
           <EditorPane
-            label={converter.sourceLabel}
-            language={converter.sourceLabel}
+            label={reversed ? converter.targetLabel : converter.sourceLabel}
+            language={reversed ? converter.targetLabel : converter.sourceLabel}
             onChange={setInput}
             placeholder="Paste input..."
             value={input}
           />
+
+          {converter.reversible && (
+            <div className="absolute left-1/2 top-1/2 z-20 -translate-x-1/2 -translate-y-1/2">
+              <button
+                aria-label="Swap direction"
+                className="flex h-10 w-10 items-center justify-center border border-border bg-card text-muted-foreground shadow-sm transition hover:bg-accent hover:text-foreground"
+                onClick={() => {
+                  setReversed((r) => !r);
+                  setInput("");
+                  setOutput("");
+                }}
+                type="button"
+              >
+                <ArrowLeftRight className="h-4 w-4" />
+              </button>
+            </div>
+          )}
+
           <EditorPane
-            label={converter.targetLabel}
-            language={converter.targetLabel}
+            label={reversed ? converter.sourceLabel : converter.targetLabel}
+            language={reversed ? converter.sourceLabel : converter.targetLabel}
             placeholder={loading ? "Transforming..." : "Output..."}
             readOnly
             value={error ? `Error: ${error}` : output}

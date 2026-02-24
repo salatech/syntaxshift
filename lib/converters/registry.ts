@@ -2,29 +2,23 @@ import type { ConverterCategory, ConverterDefinition, ConverterSettings } from "
 
 const byCategory: Record<ConverterCategory, ConverterDefinition[]> = {
   Utilities: [
-    { slug: "base64-encode", title: "Base64 Encode", sourceLabel: "Text", targetLabel: "Base64", category: "Utilities" },
-    { slug: "base64-decode", title: "Base64 Decode", sourceLabel: "Base64", targetLabel: "Text", category: "Utilities" },
+    { slug: "base64-encode", title: "Base64 Encode / Decode", sourceLabel: "Text", targetLabel: "Base64", category: "Utilities", reversible: true, reverseSlug: "base64-decode" },
     { slug: "jwt-decode", title: "JWT Decode", sourceLabel: "JWT", targetLabel: "JSON", category: "Utilities" },
   ],
   "Programming Languages": [
     {
       slug: "python-to-javascript",
-      title: "Python to JavaScript",
+      title: "Python / JavaScript",
       sourceLabel: "Python",
       targetLabel: "JavaScript",
       category: "Programming Languages",
-    },
-    {
-      slug: "javascript-to-python",
-      title: "JavaScript to Python",
-      sourceLabel: "JavaScript",
-      targetLabel: "Python",
-      category: "Programming Languages",
+      reversible: true,
+      reverseSlug: "javascript-to-python",
     },
   ],
   JSON: [
     { slug: "json-to-typescript", title: "JSON to TypeScript", sourceLabel: "JSON", targetLabel: "TypeScript", category: "JSON" },
-    { slug: "json-to-yaml", title: "JSON to YAML", sourceLabel: "JSON", targetLabel: "YAML", category: "JSON" },
+    { slug: "json-to-yaml", title: "JSON / YAML", sourceLabel: "JSON", targetLabel: "YAML", category: "JSON", reversible: true, reverseSlug: "yaml-to-json" },
     { slug: "json-to-zod", title: "JSON to Zod Schema", sourceLabel: "JSON", targetLabel: "Zod", category: "JSON" },
   ],
   "JSON Schema": [
@@ -42,7 +36,6 @@ const byCategory: Record<ConverterCategory, ConverterDefinition[]> = {
     { slug: "html-to-jsx", title: "HTML to JSX", sourceLabel: "HTML", targetLabel: "JSX", category: "Others" },
     { slug: "markdown-to-html", title: "Markdown to HTML", sourceLabel: "Markdown", targetLabel: "HTML", category: "Others" },
     { slug: "xml-to-json", title: "XML to JSON", sourceLabel: "XML", targetLabel: "JSON", category: "Others" },
-    { slug: "yaml-to-json", title: "YAML to JSON", sourceLabel: "YAML", targetLabel: "JSON", category: "Others" },
   ],
 };
 

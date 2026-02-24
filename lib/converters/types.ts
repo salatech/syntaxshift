@@ -22,6 +22,8 @@ export type ConverterDefinition = {
   targetLabel: string;
   category: ConverterCategory;
   settings?: ConverterSetting[];
+  reversible?: boolean;
+  reverseSlug?: string;
 };
 
 export type ConverterSettings = Record<string, boolean | string>;
