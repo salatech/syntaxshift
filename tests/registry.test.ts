@@ -16,6 +16,6 @@ describe("converter registry", () => {
   });
 
   it("includes full transform.tools catalog currently tracked", () => {
-    expect(converterRegistry.length).toBe(11);
+    expect(converterRegistry.length).toBe(13);
   });
 });

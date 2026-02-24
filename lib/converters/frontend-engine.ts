@@ -442,9 +442,23 @@ export async function transformInFrontend(
       return { output: base64Decode(input) };
     case "jwt-decode":
       return { output: jwtDecode(input) };
+    case "url-encode":
+      return { output: encodeURIComponent(input) };
+    case "url-decode":
+      return { output: decodeURIComponent(input) };
+    case "rot13-encode":
+    case "rot13-decode":
+      return { output: rot13(input) };
     case "json-to-zod":
       return { output: jsonToZod(input) };
     default:
       throw new Error("Unsupported transform mode.");
   }
+}
+
+function rot13(input: string): string {
+  return input.replace(/[a-zA-Z]/g, (char) => {
+    const base = char <= "Z" ? 65 : 97;
+    return String.fromCharCode(((char.charCodeAt(0) - base + 13) % 26) + base);
+  });
 }

@@ -3,6 +3,8 @@ import type { ConverterCategory, ConverterDefinition, ConverterSettings } from "
 const byCategory: Record<ConverterCategory, ConverterDefinition[]> = {
   Utilities: [
     { slug: "base64-encode", title: "Base64 Encode / Decode", sourceLabel: "Text", targetLabel: "Base64", category: "Utilities", reversible: true, reverseSlug: "base64-decode" },
+    { slug: "url-encode", title: "URL Encode / Decode", sourceLabel: "Text", targetLabel: "URL Encoded", category: "Utilities", reversible: true, reverseSlug: "url-decode" },
+    { slug: "rot13-encode", title: "ROT13 Cipher", sourceLabel: "Text", targetLabel: "ROT13", category: "Utilities", reversible: true, reverseSlug: "rot13-decode" },
     { slug: "jwt-decode", title: "JWT Decode", sourceLabel: "JWT", targetLabel: "JSON", category: "Utilities" },
   ],
   "Programming Languages": [
@@ -66,6 +68,10 @@ export function getDefaultInput(slug: string): string {
     "yaml-to-json": "id: 1\nname: SyntaxShift",
     "base64-encode": "Hello, SyntaxShift!",
     "base64-decode": "SGVsbG8sIFN5bnRheFNoaWZ0IQ==",
+    "url-encode": "Hello World! How are you?",
+    "url-decode": "Hello%20World%21%20How%20are%20you%3F",
+    "rot13-encode": "Hello, SyntaxShift!",
+    "rot13-decode": "Uryyb, FlagnkFuvsg!",
     "jwt-decode": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IlN5bnRheFNoaWZ0IiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
   };
 
