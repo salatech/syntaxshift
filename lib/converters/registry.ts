@@ -17,6 +17,15 @@ const byCategory: Record<ConverterCategory, ConverterDefinition[]> = {
   JSON: [
     { slug: "json-to-typescript", title: "JSON to TypeScript", sourceLabel: "JSON", targetLabel: "TypeScript", category: "JSON" },
     { slug: "json-to-yaml", title: "JSON to YAML", sourceLabel: "JSON", targetLabel: "YAML", category: "JSON" },
+    {
+      slug: "json-prettify",
+      title: "JSON Prettify / Minify",
+      sourceLabel: "JSON",
+      targetLabel: "JSON",
+      category: "JSON",
+      settings: [{ key: "minify", label: "Minify output", type: "boolean", defaultValue: false }],
+    },
+    { slug: "json-to-zod", title: "JSON to Zod Schema", sourceLabel: "JSON", targetLabel: "Zod", category: "JSON" },
   ],
   "JSON Schema": [
     { slug: "json-schema-to-typescript", title: "JSON Schema to TypeScript", sourceLabel: "JSON Schema", targetLabel: "TypeScript", category: "JSON Schema" },
@@ -43,6 +52,11 @@ const byCategory: Record<ConverterCategory, ConverterDefinition[]> = {
   "JSON-LD": [],
   TypeScript: [],
   Flow: [],
+  Utilities: [
+    { slug: "base64-encode", title: "Base64 Encode", sourceLabel: "Text", targetLabel: "Base64", category: "Utilities" },
+    { slug: "base64-decode", title: "Base64 Decode", sourceLabel: "Base64", targetLabel: "Text", category: "Utilities" },
+    { slug: "jwt-decode", title: "JWT Decode", sourceLabel: "JWT", targetLabel: "JSON", category: "Utilities" },
+  ],
   Others: [
     { slug: "markdown-to-html", title: "Markdown to HTML", sourceLabel: "Markdown", targetLabel: "HTML", category: "Others" },
     { slug: "xml-to-json", title: "XML to JSON", sourceLabel: "XML", targetLabel: "JSON", category: "Others" },
@@ -86,6 +100,9 @@ export function getDefaultInput(slug: string): string {
   if (converter.slug === "javascript-to-python") return "function greet(name) {\n  return `Hello, ${name}`;\n}";
   if (converter.slug === "toml-to-json" || converter.slug === "toml-to-yaml") return 'id = 1\nname = "SyntaxShift"';
   if (converter.slug === "cadence-to-go") return "pub contract Hello {}";
+  if (converter.slug === "base64-encode") return "Hello, SyntaxShift!";
+  if (converter.slug === "base64-decode") return "SGVsbG8sIFN5bnRheFNoaWZ0IQ==";
+  if (converter.slug === "jwt-decode") return "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IlN5bnRheFNoaWZ0IiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
 
   return sampleBySource.get(converter.sourceLabel) ?? "";
 }

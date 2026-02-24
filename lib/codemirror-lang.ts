@@ -33,6 +33,8 @@ export function getLanguageExtension(label: string): Extension | null {
             return markdown();
         case "CSS":
             return css();
+        case "Zod":
+            return javascript({ jsx: false, typescript: true });
         default:
             return null;
     }

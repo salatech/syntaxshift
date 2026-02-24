@@ -241,9 +241,9 @@ function svgToJsx(input: string, settings: ConverterSettings): string {
   const optimized = settings.svgo === false
     ? input
     : input
-        .replace(/<!--[\s\S]*?-->/g, "")
-        .replace(/\s{2,}/g, " ")
-        .trim();
+      .replace(/<!--[\s\S]*?-->/g, "")
+      .replace(/\s{2,}/g, " ")
+      .trim();
 
   return optimized
     .replace(/\bclass=/g, "className=")
@@ -347,6 +347,67 @@ function javascriptToPython(input: string): string {
   return output.join("\n");
 }
 
+function base64Encode(input: string): string {
+  return btoa(unescape(encodeURIComponent(input)));
+}
+
+function base64Decode(input: string): string {
+  return decodeURIComponent(escape(atob(input.trim())));
+}
+
+function jwtDecode(input: string): string {
+  const parts = input.trim().split(".");
+  if (parts.length !== 3) throw new Error("Invalid JWT: expected 3 dot-separated parts.");
+
+  const decodeBase64Url = (str: string): string => {
+    const base64 = str.replace(/-/g, "+").replace(/_/g, "/");
+    const padded = base64 + "=".repeat((4 - (base64.length % 4)) % 4);
+    return decodeURIComponent(escape(atob(padded)));
+  };
+
+  const header = JSON.parse(decodeBase64Url(parts[0]));
+  const payload = JSON.parse(decodeBase64Url(parts[1]));
+
+  return JSON.stringify({ header, payload, signature: parts[2] }, null, 2);
+}
+
+function jsonPrettifyMinify(input: string, settings: ConverterSettings): string {
+  const parsed = parseJsonLenient(input);
+  const minify = settings.minify === true;
+  return JSON.stringify(parsed, null, minify ? 0 : 2);
+}
+
+function inferZodType(value: unknown, indent: number = 0): string {
+  const pad = "  ".repeat(indent);
+  const innerPad = "  ".repeat(indent + 1);
+
+  if (value === null) return "z.null()";
+  if (typeof value === "string") return "z.string()";
+  if (typeof value === "number") return Number.isInteger(value) ? "z.number().int()" : "z.number()";
+  if (typeof value === "boolean") return "z.boolean()";
+
+  if (Array.isArray(value)) {
+    if (value.length === 0) return "z.array(z.unknown())";
+    return `z.array(${inferZodType(value[0], indent)})`;
+  }
+
+  if (typeof value === "object") {
+    const entries = Object.entries(value as Record<string, unknown>);
+    if (entries.length === 0) return "z.object({})";
+    const fields = entries
+      .map(([key, val]) => `${innerPad}${key}: ${inferZodType(val, indent + 1)}`)
+      .join(",\n");
+    return `z.object({\n${fields},\n${pad}})`;
+  }
+
+  return "z.unknown()";
+}
+
+function jsonToZod(input: string): string {
+  const parsed = parseJsonLenient(input);
+  return `import { z } from "zod";\n\nconst schema = ${inferZodType(parsed)};\n\ntype Schema = z.infer<typeof schema>;`;
+}
+
 export async function transformInFrontend(
   slug: string,
   input: string,
@@ -375,6 +436,16 @@ export async function transformInFrontend(
       return { output: pythonToJavaScript(input) };
     case "javascript-to-python":
       return { output: javascriptToPython(input) };
+    case "base64-encode":
+      return { output: base64Encode(input) };
+    case "base64-decode":
+      return { output: base64Decode(input) };
+    case "jwt-decode":
+      return { output: jwtDecode(input) };
+    case "json-prettify":
+      return { output: jsonPrettifyMinify(input, settings) };
+    case "json-to-zod":
+      return { output: jsonToZod(input) };
     default:
       throw new Error("Unsupported transform mode.");
   }

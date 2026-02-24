@@ -10,6 +10,7 @@ export type ConverterCategory =
   | "JSON-LD"
   | "TypeScript"
   | "Flow"
+  | "Utilities"
   | "Others";
 
 export type ConverterSettingType = "boolean" | "select" | "text";
