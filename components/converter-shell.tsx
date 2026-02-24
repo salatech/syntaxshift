@@ -167,7 +167,7 @@ export function ConverterShell({ slug }: ConverterShellProps) {
           );
         })()}
 
-        <section className="mt-3 grid min-h-0 flex-1 grid-cols-1 gap-3 lg:grid-cols-2">
+        <section className="mt-3 grid min-h-0 flex-1 grid-cols-1 gap-3 pb-20 lg:grid-cols-2 lg:pb-0">
           <EditorPane
             label={converter.sourceLabel}
             language={converter.sourceLabel}
@@ -184,6 +184,29 @@ export function ConverterShell({ slug }: ConverterShellProps) {
           />
         </section>
       </section>
+
+      {/* Mobile bottom bar */}
+      <div className="fixed bottom-0 left-0 right-0 z-50 flex items-center justify-between border-t border-border/70 bg-card/95 px-3 py-2.5 backdrop-blur lg:hidden">
+        <button
+          className="flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-sm font-medium text-foreground transition hover:bg-accent"
+          onClick={() => setMobileNavOpen(true)}
+          type="button"
+        >
+          <Menu className="h-4 w-4 text-muted-foreground" />
+          <span className="max-w-[160px] truncate">{converter.title}</span>
+        </button>
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
+          <button
+            className="rounded-lg border border-border bg-background px-3 py-1.5 text-sm font-medium transition hover:bg-accent disabled:opacity-50"
+            disabled={!output}
+            onClick={copyOutput}
+            type="button"
+          >
+            {copied ? "Copied" : "Copy"}
+          </button>
+        </div>
+      </div>
     </main>
   );
 }
