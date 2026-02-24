@@ -1,8 +1,6 @@
 import type { ConverterCategory, ConverterDefinition, ConverterSettings } from "@/lib/converters/types";
 
 const byCategory: Record<ConverterCategory, ConverterDefinition[]> = {
-  SVG: [],
-  HTML: [],
   Utilities: [
     { slug: "base64-encode", title: "Base64 Encode", sourceLabel: "Text", targetLabel: "Base64", category: "Utilities" },
     { slug: "base64-decode", title: "Base64 Decode", sourceLabel: "Base64", targetLabel: "Text", category: "Utilities" },
@@ -24,7 +22,6 @@ const byCategory: Record<ConverterCategory, ConverterDefinition[]> = {
       category: "Programming Languages",
     },
   ],
-
   JSON: [
     { slug: "json-to-typescript", title: "JSON to TypeScript", sourceLabel: "JSON", targetLabel: "TypeScript", category: "JSON" },
     { slug: "json-to-yaml", title: "JSON to YAML", sourceLabel: "JSON", targetLabel: "YAML", category: "JSON" },
@@ -41,14 +38,6 @@ const byCategory: Record<ConverterCategory, ConverterDefinition[]> = {
   "JSON Schema": [
     { slug: "json-schema-to-typescript", title: "JSON Schema to TypeScript", sourceLabel: "JSON Schema", targetLabel: "TypeScript", category: "JSON Schema" },
   ],
-
-  CSS: [],
-  JavaScript: [],
-  GraphQL: [],
-  "JSON-LD": [],
-  TypeScript: [],
-  Flow: [],
-
   Others: [
     {
       slug: "svg-to-jsx",
@@ -65,9 +54,7 @@ const byCategory: Record<ConverterCategory, ConverterDefinition[]> = {
   ],
 };
 
-export const converterCategories = (Object.keys(byCategory) as ConverterCategory[]).filter(
-  (category) => byCategory[category].length > 0,
-);
+export const converterCategories = Object.keys(byCategory) as ConverterCategory[];
 export const convertersByCategory = byCategory;
 export const converterRegistry = converterCategories.flatMap((category) => byCategory[category]);
 export const defaultConverterSlug = "svg-to-jsx";
@@ -80,32 +67,25 @@ export function getDefaultInput(slug: string): string {
   const converter = getConverterBySlug(slug);
   if (!converter) return "";
 
-  const sampleBySource = new Map<string, string>([
-    ["SVG", '<svg width="100" height="100"><rect x="10" y="10" width="80" height="80" fill="#4f46e5" /></svg>'],
-    ["HTML", "<div class=\"card\"><h1>Hello</h1></div>"],
-    ["JSON", '{\n  "id": 1,\n  "name": "SyntaxShift",\n  "active": true,\n  "tags": ["tools", "convert"]\n}'],
-    ["JSON Schema", '{\n  "title": "User",\n  "type": "object",\n  "properties": {\n    "id": { "type": "number" },\n    "name": { "type": "string" }\n  },\n  "required": ["id", "name"]\n}'],
-    ["CSS", ".card { padding: 1rem; background: #f8fafc; border-radius: 8px; }"],
-    ["JavaScript", "({ id: 1, name: 'SyntaxShift', enabled: true })"],
-    ["Python", "def greet(name):\n    return f\"Hello, {name}\""],
-    ["GraphQL", "type Query {\n  health: String!\n}"],
-    ["JSON-LD", '{\n  "@context": "https://schema.org",\n  "@type": "Person",\n  "name": "Ada Lovelace"\n}'],
-    ["TypeScript", "type User = {\n  id: number;\n  name: string;\n};"],
-    ["Flow", "type User = {\n  id: number,\n  name: string,\n};"],
-    ["Others", "name = \"syntaxshift\"\nversion = \"0.1.0\""],
-  ]);
+  const defaults: Record<string, string> = {
+    "svg-to-jsx": '<svg width="100" height="100"><rect x="10" y="10" width="80" height="80" fill="#4f46e5" /></svg>',
+    "html-to-jsx": '<div class="card"><h1>Hello</h1></div>',
+    "json-to-typescript": '{\n  "id": 1,\n  "name": "SyntaxShift",\n  "active": true,\n  "tags": ["tools", "convert"]\n}',
+    "json-to-yaml": '{\n  "id": 1,\n  "name": "SyntaxShift",\n  "active": true\n}',
+    "json-prettify": '{"id":1,"name":"SyntaxShift","active":true,"tags":["tools","convert"]}',
+    "json-to-zod": '{\n  "id": 1,\n  "name": "SyntaxShift",\n  "active": true,\n  "tags": ["tools", "convert"]\n}',
+    "json-schema-to-typescript": '{\n  "title": "User",\n  "type": "object",\n  "properties": {\n    "id": { "type": "number" },\n    "name": { "type": "string" }\n  },\n  "required": ["id", "name"]\n}',
+    "python-to-javascript": "def greet(name):\n    return f\"Hello, {name}\"",
+    "javascript-to-python": "function greet(name) {\n  return `Hello, ${name}`;\n}",
+    "markdown-to-html": "# SyntaxShift\n\nConvert anything.",
+    "xml-to-json": "<user><id>1</id><name>SyntaxShift</name></user>",
+    "yaml-to-json": "id: 1\nname: SyntaxShift",
+    "base64-encode": "Hello, SyntaxShift!",
+    "base64-decode": "SGVsbG8sIFN5bnRheFNoaWZ0IQ==",
+    "jwt-decode": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IlN5bnRheFNoaWZ0IiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+  };
 
-  if (converter.slug === "markdown-to-html") return "# SyntaxShift\n\nConvert anything.";
-  if (converter.slug === "xml-to-json") return "<user><id>1</id><name>SyntaxShift</name></user>";
-  if (converter.slug === "yaml-to-json" || converter.slug === "yaml-to-toml") return "id: 1\nname: SyntaxShift";
-  if (converter.slug === "javascript-to-python") return "function greet(name) {\n  return `Hello, ${name}`;\n}";
-  if (converter.slug === "toml-to-json" || converter.slug === "toml-to-yaml") return 'id = 1\nname = "SyntaxShift"';
-  if (converter.slug === "cadence-to-go") return "pub contract Hello {}";
-  if (converter.slug === "base64-encode") return "Hello, SyntaxShift!";
-  if (converter.slug === "base64-decode") return "SGVsbG8sIFN5bnRheFNoaWZ0IQ==";
-  if (converter.slug === "jwt-decode") return "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IlN5bnRheFNoaWZ0IiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
-
-  return sampleBySource.get(converter.sourceLabel) ?? "";
+  return defaults[slug] ?? "";
 }
 
 export function getDefaultSettings(slug: string): ConverterSettings {

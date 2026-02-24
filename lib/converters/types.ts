@@ -1,16 +1,8 @@
 export type ConverterCategory =
-  | "SVG"
-  | "HTML"
+  | "Utilities"
+  | "Programming Languages"
   | "JSON"
   | "JSON Schema"
-  | "Programming Languages"
-  | "CSS"
-  | "JavaScript"
-  | "GraphQL"
-  | "JSON-LD"
-  | "TypeScript"
-  | "Flow"
-  | "Utilities"
   | "Others";
 
 export type ConverterSettingType = "boolean" | "select" | "text";
