@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { cn } from "@/lib/utils";
-import { converterCategories, convertersByCategory } from "@/lib/converters/registry";
+import { converterCategories, convertersByCategory, defaultConverterSlug } from "@/lib/converters/registry";
 
 type ConverterNavProps = {
   className?: string;
@@ -13,7 +13,7 @@ type ConverterNavProps = {
 
 export function ConverterNav({ className, onNavigate }: ConverterNavProps) {
   const pathname = usePathname();
-  const activeSlug = pathname.replace("/", "") || "svg-to-jsx";
+  const activeSlug = pathname.replace("/", "") || defaultConverterSlug;
 
   return (
     <aside
