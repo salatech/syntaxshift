@@ -57,7 +57,7 @@ const byCategory: Record<ConverterCategory, ConverterDefinition[]> = {
 export const converterCategories = Object.keys(byCategory) as ConverterCategory[];
 export const convertersByCategory = byCategory;
 export const converterRegistry = converterCategories.flatMap((category) => byCategory[category]);
-export const defaultConverterSlug = "svg-to-jsx";
+export const defaultConverterSlug = "jwt-decode";
 
 export function getConverterBySlug(slug: string): ConverterDefinition | undefined {
   return converterRegistry.find((converter) => converter.slug === slug);

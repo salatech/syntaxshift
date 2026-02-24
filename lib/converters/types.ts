@@ -22,7 +22,6 @@ export type ConverterDefinition = {
   targetLabel: string;
   category: ConverterCategory;
   settings?: ConverterSetting[];
-  inputPlaceholder?: string;
 };
 
 export type ConverterSettings = Record<string, boolean | string>;
