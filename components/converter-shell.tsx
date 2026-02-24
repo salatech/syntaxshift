@@ -1,12 +1,14 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, Sparkles, X } from "lucide-react";
+import Link from "next/link";
 
 import { ConverterNav } from "@/components/converter-nav";
 import { EditorPane } from "@/components/editor-pane";
 import { SettingsPanel } from "@/components/settings-panel";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { detectFormat, getSuggestedConverters } from "@/lib/detect-format";
 import { transformInFrontend } from "@/lib/converters/frontend-engine";
 import { getConverterBySlug, getDefaultInput, getDefaultSettings } from "@/lib/converters/registry";
 import type { ConverterSettings } from "@/lib/converters/types";
@@ -139,6 +141,31 @@ export function ConverterShell({ slug }: ConverterShellProps) {
             </div>
           ) : null}
         </header>
+
+        {(() => {
+          const detected = input.trim().length > 10 ? detectFormat(input) : null;
+          const suggestions = detected ? getSuggestedConverters(detected.label, slug) : [];
+          if (!detected || suggestions.length === 0) return null;
+          return (
+            <div className="mt-2 flex flex-wrap items-center gap-2 rounded-xl border border-border/60 bg-card/60 px-3 py-2 text-xs backdrop-blur transition-all">
+              <span className="inline-flex items-center gap-1 font-medium text-muted-foreground">
+                <Sparkles className="h-3 w-3" />
+                Detected <span className="rounded bg-primary/15 px-1.5 py-0.5 font-semibold text-foreground">{detected.label}</span>
+              </span>
+              <span className="text-muted-foreground">—</span>
+              <span className="text-muted-foreground">Try:</span>
+              {suggestions.slice(0, 4).map((s) => (
+                <Link
+                  className="rounded-md border border-border/80 bg-background px-2 py-0.5 font-medium text-foreground transition hover:bg-accent"
+                  href={`/${s.slug}`}
+                  key={s.slug}
+                >
+                  {s.title}
+                </Link>
+              ))}
+            </div>
+          );
+        })()}
 
         <section className="mt-3 grid min-h-0 flex-1 grid-cols-1 gap-3 lg:grid-cols-2">
           <EditorPane
