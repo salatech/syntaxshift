@@ -442,8 +442,6 @@ export async function transformInFrontend(
       return { output: base64Decode(input) };
     case "jwt-decode":
       return { output: jwtDecode(input) };
-    case "json-prettify":
-      return { output: jsonPrettifyMinify(input, settings) };
     case "json-to-zod":
       return { output: jsonToZod(input) };
     default:

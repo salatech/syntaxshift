@@ -25,14 +25,6 @@ const byCategory: Record<ConverterCategory, ConverterDefinition[]> = {
   JSON: [
     { slug: "json-to-typescript", title: "JSON to TypeScript", sourceLabel: "JSON", targetLabel: "TypeScript", category: "JSON" },
     { slug: "json-to-yaml", title: "JSON to YAML", sourceLabel: "JSON", targetLabel: "YAML", category: "JSON" },
-    {
-      slug: "json-prettify",
-      title: "JSON Prettify / Minify",
-      sourceLabel: "JSON",
-      targetLabel: "JSON",
-      category: "JSON",
-      settings: [{ key: "minify", label: "Minify output", type: "boolean", defaultValue: false }],
-    },
     { slug: "json-to-zod", title: "JSON to Zod Schema", sourceLabel: "JSON", targetLabel: "Zod", category: "JSON" },
   ],
   "JSON Schema": [
@@ -72,7 +64,6 @@ export function getDefaultInput(slug: string): string {
     "html-to-jsx": '<div class="card"><h1>Hello</h1></div>',
     "json-to-typescript": '{\n  "id": 1,\n  "name": "SyntaxShift",\n  "active": true,\n  "tags": ["tools", "convert"]\n}',
     "json-to-yaml": '{\n  "id": 1,\n  "name": "SyntaxShift",\n  "active": true\n}',
-    "json-prettify": '{"id":1,"name":"SyntaxShift","active":true,"tags":["tools","convert"]}',
     "json-to-zod": '{\n  "id": 1,\n  "name": "SyntaxShift",\n  "active": true,\n  "tags": ["tools", "convert"]\n}',
     "json-schema-to-typescript": '{\n  "title": "User",\n  "type": "object",\n  "properties": {\n    "id": { "type": "number" },\n    "name": { "type": "string" }\n  },\n  "required": ["id", "name"]\n}',
     "python-to-javascript": "def greet(name):\n    return f\"Hello, {name}\"",
